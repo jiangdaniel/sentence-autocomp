@@ -1,4 +1,5 @@
 import unittest
+from sentences import Lexicon
 
 from app import app
 
@@ -37,6 +38,16 @@ class PostTestCase(unittest.TestCase):
         rv = self.app.post('/js', data={'text': text})
         self.assertEqual(rv.status_code, 200)
         self.assertEqual(text, rv.data)
+
+class LexiconTestCase(unittest.TestCase):
+    def setUp(self):
+        file_path = '../scikit/sample_text.txt'
+        self.file = open(file_path, 'r')
+
+    def test_post(self):
+        lexicon = Lexicon()
+        lexicon.add_text(self.file.read())
+        self.file.close()
 
 if __name__ == '__main__':
     unittest.main()
