@@ -2,7 +2,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 import re
 
-cv = CountVectorizer(analyzer='word', ngram_range=(3,3), min_df = 2)
+cv = CountVectorizer(analyzer='word', ngram_range=(2,2), min_df = 1)
 
 try:
     sample_file = 'sample_text.txt'
@@ -31,20 +31,13 @@ from sklearn.cluster import DBSCAN
 from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
 
-db = DBSCAN(eps=0.3, min_samples=3).fit(train_data_features)
+db = DBSCAN(eps=1.45, min_samples=4).fit(train_data_features)
 core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
 core_samples_mask[db.core_sample_indices_] = True
 labels = db.labels_
 
 n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+print()
 
-print('Estimated number of clusters: %d' % n_clusters_)
-print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels_true, labels))
-print("Completeness: %0.3f" % metrics.completeness_score(labels_true, labels))
-print("V-measure: %0.3f" % metrics.v_measure_score(labels_true, labels))
-print("Adjusted Rand Index: %0.3f"
-              % metrics.adjusted_rand_score(labels_true, labels))
-print("Adjusted Mutual Information: %0.3f"
-              % metrics.adjusted_mutual_info_score(labels_true, labels))
-print("Silhouette Coefficient: %0.3f"
-              % metrics.silhouette_score(X, labels))
+for cat, sent in zip(labels, sample_sentences):
+    print(cat, sent)
