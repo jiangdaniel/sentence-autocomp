@@ -19,6 +19,5 @@ def js():
     else:
         return "JS request URI"
 
-
 if __name__ == "__main__":
     app.run()
