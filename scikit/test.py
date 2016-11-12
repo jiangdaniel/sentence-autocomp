@@ -1,4 +1,7 @@
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.cluster import DBSCAN
+from sklearn import metrics
+from sklearn.preprocessing import StandardScaler
 import numpy as np
 import re
 
@@ -8,9 +11,11 @@ import re
 cv = CountVectorizer(analyzer='word', ngram_range=(2,2), min_df = 1)
 
 try:
-    sample_file = 'dear_america.txt'
+    sample_file = 'sample_text.txt'
     sample_text = open(sample_file, 'r').read()
     sample_sentences = re.split('[.?!]', sample_text)
+    for i in range(len(sample_sentences)):
+        sample_sentences[i] = sample_sentences[i].strip()
 except IOError:
     sample_sentences = [u'The quick brown fox jumped over the lazy brown dog.', u'The quick thinking hare jumped over the moon.']
 
@@ -30,9 +35,12 @@ dist = np.sum(train_data_features, axis=0)
 for tag, count in zip(vocab, dist):
     print (count, tag)
 
-from sklearn.cluster import DBSCAN
-from sklearn import metrics
-from sklearn.preprocessing import StandardScaler
+# esp - the distance samples must be within of each other to become a core sample
+# increasing this number will make the categories more inclusive
+
+# min_samples - the minimum number of simmilar samples required to become a core sample
+# Increasing this number will require there to be more occurences of a sentence structure
+# to become recognized as a group
 
 db = DBSCAN(eps=1.45, min_samples=4).fit(train_data_features)
 core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
