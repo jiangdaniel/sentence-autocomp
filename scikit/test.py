@@ -1,8 +1,13 @@
 from sklearn.feature_extraction.text import CountVectorizer
 
-cv = CountVectorizer(analyzer='word', ngram_range=(2,2), min_df = 0)
+cv = CountVectorizer(analyzer='word', ngram_range=(3,3), min_df = 2)
 
-corpus = [u'The quick brown fox jumped over the lazy brown dog.', u'The quick thinking hare jumped over the moon.']
+try:
+    sample_text = open('sample_text.txt', 'r')
+    corpus = sample_text.read().split('.')
+except IOError:
+    corpus = [u'The quick brown fox jumped over the lazy brown dog.', u'The quick thinking hare jumped over the moon.']
+
 for text in corpus:
     print(text)
 print()
