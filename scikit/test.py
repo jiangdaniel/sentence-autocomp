@@ -2,10 +2,13 @@ from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 import re
 
-cv = CountVectorizer(analyzer='word', ngram_range=(3,3), min_df = 2)
+# min_df sets the number of times a ngram must repeat to be inclduded in info vector
+# With 1, all ngrams are included
+# With 2, only ngrams that repeat at least once are included
+cv = CountVectorizer(analyzer='word', ngram_range=(2,2), min_df = 1)
 
 try:
-    sample_file = 'sample_text.txt'
+    sample_file = 'dear_america.txt'
     sample_text = open(sample_file, 'r').read()
     sample_sentences = re.split('[.?!]', sample_text)
 except IOError:
