@@ -19,6 +19,5 @@ def get_request(post_id):
     # show the post with the given id, the id is an integer
     return 'Post %d' % post_id
 
-
 if __name__ == "__main__":
     app.run()

@@ -1,4 +1,5 @@
 from sklearn.feature_extraction.text import CountVectorizer
+import numpy as np
 
 cv = CountVectorizer(analyzer='word', ngram_range=(3,3), min_df = 2)
 
@@ -8,12 +9,19 @@ try:
 except IOError:
     corpus = [u'The quick brown fox jumped over the lazy brown dog.', u'The quick thinking hare jumped over the moon.']
 
+print("Sentences analyzed")
 for text in corpus:
     print(text)
 print()
 
-print(cv.fit_transform(corpus).toarray())
+train_data_features = cv.fit_transform(corpus).toarray()
+print("(number of entries, number of features):")
+print(train_data_features.shape)
+print()
 
-for pair in cv.get_feature_names():
-    print(pair)
+print("Features found - repeating tokens - and frequency")
+vocab = cv.get_feature_names()
+dist = np.sum(train_data_features, axis=0)
+for tag, count in zip(vocab, dist):
+    print (count, tag)
 
