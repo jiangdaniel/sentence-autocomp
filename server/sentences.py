@@ -64,58 +64,47 @@ class StaticSentence(Sentence):
 
 class VariableSentence(Sentence):
     def create(variations):
-        # FIXME
         assert len(variations) > 0
         if (len(variations) == 1):
             return StaticSentence(variations[0])
 
-        # This requires further implementation
-        result = variations[0]
+        def naive_merge(words1, words2):
+            result = []
+            i1, i2 = 0, 0
+            while True:
+                if i1 >= len(words1) or i2 >= len(words2):
+                    if i1 < len(words1) or i2 < len(words2):
+                        result.append('%s')
+                    break
+                if (words1[i1] == words2[i2]):
+                    result.append(words1[i1])
+                    i1 += 1
+                    i2 += 1
+                else:
+                    if len(result) == 0 or result[-1] != '%s':
+                        result.append('%s')
+                    next_i1 = next_index(words2[i2], words1, i1 + 1)
+                    next_i2 = next_index(words1[i1], words2, i2 + 1)
+                    if next_i2 >= 0:
+                        i2 = next_i2
+                    elif next_i1 >= 0:
+                        i1 = next_i1
+                    else:
+                        i1 += 1
+                        i2 += 1
+            return result
 
-        return VariableSentence(result)
+        def next_index(el, lst, start):
+            for i in range(start, len(lst)):
+                if lst[i] == el:
+                    return i
+            return -1
 
-    def and_array(matrix):
-        """Combines a m x n matrix in a single array of length n.
+        master = variations[0].split()
+        for i in range(1, len(variations)):
+            master = naive_merge(master, variations[i].split())
 
-        This array stores the minimum value of each column. Thus, the array
-        stores the minimum number of times an ngram appears.
-        """
-        assert len(matrix) > 0, "Given array is too short"
-        result = [10000] * len(matrix[0])
-        for array in matrix:
-            for j in range(len(array)):
-                result[j] = min(array[j], result[j])
-        return result
-
-
-def naive_search(variations):
-    split_variations = split(variations)
-    master_sent = split_variations[0]
-    for i in range(1, len(split_variations)):
-        other_sent = split_variations[i]
-
-        master_i = 0
-        other_i = 0
-
-        master_word = master_sent[master_i]
-        other_word = other_sent[other_i]
-
-        if master_word == other_word:
-            master_i += 1
-            other_i += 1
-
-        else:
-            pass
-            # Search for the occurence
-            # If you can't find it
-
-
-def split(variations):
-    result = []
-    for sent in variations:
-        result.append(sent.split())
-    return result
-
+        return VariableSentence(' '.join(master))
 
 class Trie:
     def __init__(self, val):

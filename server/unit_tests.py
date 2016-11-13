@@ -1,5 +1,6 @@
 import unittest
 from sentences import Lexicon
+from sentences import VariableSentence
 
 from app import app
 
@@ -82,6 +83,31 @@ class ConstructTreeTestCase(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+class VarSentenceTestCase(unittest.TestCase):
+    def setUp(self):
+        self.variations1 = [
+        'The quick brown fox jumps over the lazy dog and cat',
+        'The quick red fox jumps over the happy dog',
+        'The quick green fox jumps over the sad dog',
+        'The quick purple fox jumps over the cheering dog',
+        'The quick orange fox jumps over the lazy dog',
+        'The quick brown fox jumps over the lazy dog'
+        ]
+        self.correct1 = 'The quick %s fox jumps over the %s dog %s'
+        self.variations2 = [
+        'A quick brown fox jumps over the lazy dog',
+        'The quick brown fox jumps over the lazy dog',
+        'My quick brown fox jumps over the lazy dog',
+        'Your quick brown fox jumps up over the lazy dog',
+        'The quick brown fox jumps up and over the lazy dog',
+        'The quick brown fox jumps over the lazy dog'
+        ]
+        self.correct2 = '%s quick brown fox jumps %s over the lazy dog'
+
+    def test_create(self):
+        self.assertEqual(self.correct1, VariableSentence.create(self.variations1).data)
+        self.assertEqual(self.correct2, VariableSentence.create(self.variations2).data)
 
 if __name__ == '__main__':
     unittest.main()
