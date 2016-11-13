@@ -27,6 +27,21 @@ class Lexicon:
         for sentence in self.sentences:
             print(sentence)
 
+    def construct_trie(self):
+        def add_words(trie, words):
+            if len(words) == 0:
+                return
+            word = words.pop(0)
+            if not trie.has_child(word):
+                trie.add_child(word)
+            add_words(trie.get_child(word), words)
+
+        root = Trie(None)
+        for sentence in self.sentences:
+            words = sentence.split()
+            add_words(root, words)
+        return root
+
 
 class Sentence:
     """ Represents a generic sentence. """
@@ -54,3 +69,17 @@ class VariableSentence(Sentence):
             return StaticSentence(variations[0])
         result = ""
         return VariableSentence(result)
+
+class Trie:
+    def __init__(self, val):
+        self.val = val
+        self.children = dict()
+
+    def has_child(self, val):
+        return val in self.children
+
+    def get_child(self, val):
+        return self.children[val]
+
+    def add_child(self, val):
+        self.children[val] = Trie(val)
