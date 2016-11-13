@@ -1,0 +1,50 @@
+<!doctype html>
+    <head></head>
+    <body>
+        <button id="get-button">Simple get request</button>
+        <div id="get-label"></div>
+        <br><br>
+
+        Training text:<br>
+        <textarea type="text" id="post-field"></textarea><br>
+        <button id="post-button">Simple post request</button>
+        <div id="post-label"></div>
+        <script src="jquery-3.1.1.min.js"></script>
+        <script>
+        $(document).ready(function(){
+            const SERVER_URL = "http://127.0.0.1:5000/";
+            const sendGet = function() {
+                $.ajax({
+                    url: SERVER_URL,
+                    success: function(data) {
+                        $('#get-label').html(data);
+                    },
+                    error: function(xhr, status) {
+                        var text = "Error\nStatus code: " + status.toString();
+                        $('#get-label').html(text);
+                    }
+                });
+            };
+            const sendPost = function() {
+                text = $('#post-field').val();
+                const data = {'text': text};
+                $.ajax({
+                    url: SERVER_URL + 'train',
+                    type: 'POST',
+                    data: data,
+                    crossDomain: true,
+                    success: function(data) {
+                        $('#post-label').html(data);
+                    },
+                    error: function(xhr, status) {
+                        var text = "Error\nStatus code: " + status.toString();
+                        $('#post-label').html(text);
+                    }
+                });
+            };
+            $("#get-button").click(sendGet);
+            $("#post-button").click(sendPost);
+        });
+        </script>
+    </body>
+</html>
