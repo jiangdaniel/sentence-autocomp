@@ -105,6 +105,7 @@ def naive_search(variations):
             other_i += 1
 
         else:
+            pass
             # Search for the occurence
             # If you can't find it
 
