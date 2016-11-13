@@ -11,3 +11,7 @@ The goal of this project is to create an autocomplete Chrome extension that can 
 
 ## Day II
 * Added unit testing for Flask
+* Decided on using n-grams, CountVectorizers, and the DBSCAN clustering method
+* Tuned learning to identify similar sentences
+* Added web page for simple testing
+* Implemented algorithm for identifying shared sentence structure
