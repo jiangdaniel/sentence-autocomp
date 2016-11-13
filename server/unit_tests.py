@@ -64,5 +64,24 @@ class TrainTestCase(unittest.TestCase):
     def tearDown(self):
         self.file.close()
 
+class ConstructTreeTestCase(unittest.TestCase):
+    def setUp(self):
+        self.lexicon = Lexicon()
+        self.sentences = ['The cat in the hat', 'The cat plays piano', 'The dog drives up the road', 'Where is my mind']
+        for sentence in self.sentences:
+            self.lexicon._add_sentence(sentence)
+
+    def test_post(self):
+        trie = self.lexicon.construct_trie()
+        for sentence in self.sentences:
+            curr_trie = trie
+            words = sentence.split()
+            for word in words:
+                self.assertTrue(curr_trie.has_child(word))
+                curr_trie = curr_trie.get_child(word)
+
+    def tearDown(self):
+        pass
+
 if __name__ == '__main__':
     unittest.main()
