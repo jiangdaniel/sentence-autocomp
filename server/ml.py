@@ -30,7 +30,7 @@ class TextProcessor:
         sentences = TextProcessor._format_text(text)
         train_data = vectorizer.fit_transform(sentences).toarray()
 
-        vocab = vectorizer.get_feature_names()
+        # vocab = vectorizer.get_feature_names()
         # dist = np.sum(train_data, axis=0)
         # for tag, count in zip(vocab, dist):
         #     print (count, tag)
@@ -40,6 +40,10 @@ class TextProcessor:
         clusterer.fit(train_data)
         # core_samples_mask = np.zeros_like(clusterer.labels_, dtype=bool)
         # core_samples_mask[clusterer.core_sample_indices_] = True
+
+
+        # Labels designate the clusters found
+        # -1 is the grab bag or outlier cluster
         labels = clusterer.labels_
 
         num_clusters = len(set(labels)) - (1 if -1 in labels else 0)
@@ -53,6 +57,7 @@ class TextProcessor:
             if label == -1:
                 continue
             clusters[label].add(sentence)
+
         return clusters
 
     def _format_text(text):
