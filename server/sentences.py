@@ -18,7 +18,6 @@ class Lexicon:
                 newSentence = VariableSentence.create(list(cluster))
             self.sentences.append(newSentence)
 
-        self.print_sentences()
 
     def read_input(self):
         # FIXME
@@ -62,6 +61,9 @@ class StaticSentence(Sentence):
     def __init__(self, data):
         super().__init__(data, 0)
 
+    def __repr__(self):
+        return "StaticSentence('%s', 0)" % self.data
+
 class VariableSentence(Sentence):
     def create(variations):
         # FIXME
@@ -87,6 +89,8 @@ class VariableSentence(Sentence):
                 result[j] = min(array[j], result[j])
         return result
 
+    def __repr__(self):
+        return "VariableSentence('%s', %s)" % (self.data, self.numParams)
 
 def naive_search(variations):
     split_variations = split(variations)
