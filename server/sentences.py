@@ -29,19 +29,28 @@ class Lexicon:
         for sentence in self.sentences:
             print(sentence)
 
-    def complete(start):
+    def complete(self, start):
         """Given the start of a sentence predict the rest of it"""
         assert self.trie != None, "No training has been done"
         words = start.split(' ')
         progress = self.trie
         for word in words:
-            if not self.has_child(word):
-                return "No prediction found"
+            if not progress.has_child(word):
+                return None
             progress = progress.get_child(word)
+        prediction = ""
 
+        next_trie = progress.most_likely_child()
+        while next_trie != None:
+            next_word = next_trie.val
+            prediction += next_word + " "
+            progress = progress.get_child(next_word)
+            next_trie = progress.most_likely_child()
 
-
-
+        if len(prediction) > 0:
+            return prediction[:-1]
+        else:
+            return prediction
 
     def construct_trie(self):
         def add_words(trie, words):
@@ -172,6 +181,9 @@ class Trie:
 
     def random_child(self):
         """Returns a random child if not leaf, else None"""
+        if self.is_leaf():
+            return None
+
         key_iter = self.children.keys().__iter__()
         return self.children[next(key_iter)]
 

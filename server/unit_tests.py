@@ -109,5 +109,18 @@ class VarSentenceTestCase(unittest.TestCase):
         self.assertEqual(self.correct1, VariableSentence.create(self.variations1).data)
         self.assertEqual(self.correct2, VariableSentence.create(self.variations2).data)
 
+
+class TrieTestCase(unittest.TestCase):
+    def setUp(self):
+        self.lexicon = Lexicon()
+        self.lexicon.add_text("Thanks for the update. I do not have an apple. Thanks for the update. You can collect them all. Thanks for the update. Zero is the loneliest number. Thanks for the update. I'll see you at 2. I'll see you at two. I'll see you at three o'clock. I'll see you at the end. I'll see you later. The woods are lovely dark and deep.")
+        self.trie = self.lexicon.construct_trie()
+
+    def test_child(self):
+        self.assertIsNotNone(self.trie.random_child())
+
+    def test_complete(self):
+        self.assertEqual(self.lexicon.complete("Thanks for"), "the update")
+
 if __name__ == '__main__':
     unittest.main()
