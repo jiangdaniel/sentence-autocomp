@@ -1,4 +1,5 @@
 from ml import TextProcessor as TP
+from sklearn.feature_extraction.text import CountVectorizer
 
 class Lexicon:
     def __init__(self):
@@ -52,5 +53,51 @@ class VariableSentence(Sentence):
         assert len(variations) > 0
         if (len(variations) == 1):
             return StaticSentence(variations[0])
-        result = ""
+
+        # This requires further implementation
+        result = variations[0]
+
         return VariableSentence(result)
+
+    def and_array(matrix):
+        """Combines a m x n matrix in a single array of length n.
+
+        This array stores the minimum value of each column. Thus, the array
+        stores the minimum number of times an ngram appears.
+        """
+        assert len(matrix) > 0, "Given array is too short"
+        result = [10000] * len(matrix[0])
+        for array in matrix:
+            for j in range(len(array)):
+                result[j] = min(array[j], result[j])
+        return result
+
+
+def naive_search(variations):
+    split_variations = split(variations)
+    master_sent = split_variations[0]
+    for i in range(1, len(split_variations)):
+        other_sent = split_variations[i]
+
+        master_i = 0
+        other_i = 0
+
+        master_word = master_sent[master_i]
+        other_word = other_sent[other_i]
+
+        if master_word == other_word:
+            master_i += 1
+            other_i += 1
+
+        else:
+            # Search for the occurence
+            # If you can't find it
+
+
+def split(variations):
+    result = []
+    for sent in variations:
+        result.append(sent.split())
+    return result
+
+
