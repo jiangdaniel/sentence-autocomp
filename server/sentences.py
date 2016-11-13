@@ -18,6 +18,8 @@ class Lexicon:
                 newSentence = VariableSentence.create(list(cluster))
             self.sentences.append(newSentence)
 
+        self.trie = self.construct_trie()
+
 
     def read_input(self):
         # FIXME
@@ -26,6 +28,20 @@ class Lexicon:
     def print_sentences(self):
         for sentence in self.sentences:
             print(sentence)
+
+    def complete(start):
+        """Given the start of a sentence predict the rest of it"""
+        assert self.trie != None, "No training has been done"
+        words = start.split(' ')
+        progress = self.trie
+        for word in words:
+            if not self.has_child(word):
+                return "No prediction found"
+            progress = progress.get_child(word)
+
+
+
+
 
     def construct_trie(self):
         def add_words(trie, words):
@@ -168,6 +184,22 @@ class Trie:
 
     def add_child(self, val):
         self.children[val] = Trie(val)
+
+    def num_children(self):
+        return len(self.children)
+
+    def is_leaf(self):
+        return self.num_children() == 0
+
+    def most_likely_child(self):
+        """Returns the likely child"""
+        # Until the children obtain weights, just return a random child
+        return self.random_child()
+
+    def random_child(self):
+        """Returns a random child if not leaf, else None"""
+        key_iter = self.children.keys().__iter__()
+        return self.children[next(key_iter)]
 
     def __repr__(self):
         return "Trie(%s, ...)" % (self.val.__repr__())
