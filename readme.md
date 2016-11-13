@@ -3,6 +3,8 @@
 
 The goal of this project is to create an autocomplete Chrome extension that can helpfully that can predict common sentences structures.
 
+See our [Devpost submission](https://devpost.com/software/sentisense)
+
 ## Day I
 * Determined Flask as viable option for hosting server
 * Discussed best approach and library (TensorFlow, TFLearn, sci-kit)
