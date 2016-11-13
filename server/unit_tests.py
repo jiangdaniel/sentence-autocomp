@@ -49,5 +49,20 @@ class LexiconTestCase(unittest.TestCase):
         lexicon.add_text(self.file.read())
         self.file.close()
 
+class TrainTestCase(unittest.TestCase):
+    def setUp(self):
+        file_path = '../scikit/sample_text.txt'
+        self.file = open(file_path, 'r')
+        self.app = app.test_client(self)
+
+    def test_post(self):
+        rv = self.app.post('/train', data={'text': self.file.read()})
+        self.assertEqual(rv.status_code, 200)
+        # FIXME: actually should assert something
+        # print(rv.data)
+
+    def tearDown(self):
+        self.file.close()
+
 if __name__ == '__main__':
     unittest.main()
