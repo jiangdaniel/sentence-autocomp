@@ -18,7 +18,8 @@ class Lexicon:
                 newSentence = VariableSentence.create(list(cluster))
             self.sentences.append(newSentence)
 
-        self.print_sentences()
+        self.trie = self.construct_trie()
+
 
     def read_input(self):
         # FIXME
@@ -27,6 +28,29 @@ class Lexicon:
     def print_sentences(self):
         for sentence in self.sentences:
             print(sentence)
+
+    def complete(self, start):
+        """Given the start of a sentence predict the rest of it"""
+        assert self.trie != None, "No training has been done"
+        words = start.split(' ')
+        progress = self.trie
+        for word in words:
+            if not progress.has_child(word):
+                return None
+            progress = progress.get_child(word)
+        prediction = ""
+
+        next_trie = progress.most_likely_child()
+        while next_trie != None:
+            next_word = next_trie.val
+            prediction += next_word + " "
+            progress = progress.get_child(next_word)
+            next_trie = progress.most_likely_child()
+
+        if len(prediction) > 0:
+            return prediction[:-1]
+        else:
+            return prediction
 
     def construct_trie(self):
         def add_words(trie, words):
@@ -39,6 +63,7 @@ class Lexicon:
 
         root = Trie(None)
         for sentence in self.sentences:
+
             words = sentence.split()
             add_words(root, words)
         return root
@@ -56,11 +81,31 @@ class Sentence:
 
     def __str__(self):
         return '"' + self.data + '"'
+    
+
+    def split(self):
+        return self.data.split()
 
 class StaticSentence(Sentence):
 
     def __init__(self, data):
         super().__init__(data, 0)
+
+    def __repr__(self):
+        return "StaticSentence('%s', 0)" % self.data
+
+    def behead(self):
+        """Returns a tuple consisting of the first word and a sentence
+        with the of the sentence after the first word.
+        """
+
+        split = self.data.find(' ')
+        if split == -1:
+            return (self.data,)
+        else:
+            word = self.data[:split]
+            rest = StaticSentence(self.data[split + 1:])
+            return (word, rest)
 
 class VariableSentence(Sentence):
     def create(variations):
@@ -107,9 +152,12 @@ class VariableSentence(Sentence):
         return VariableSentence(' '.join(master))
 
 class Trie:
-    def __init__(self, val):
+    def __init__(self, val, chil = None):
         self.val = val
-        self.children = dict()
+        if chil:
+            self.children = chil
+        else:
+            self.children = dict()
 
     def has_child(self, val):
         return val in self.children
@@ -119,3 +167,25 @@ class Trie:
 
     def add_child(self, val):
         self.children[val] = Trie(val)
+
+    def num_children(self):
+        return len(self.children)
+
+    def is_leaf(self):
+        return self.num_children() == 0
+
+    def most_likely_child(self):
+        """Returns the likely child"""
+        # Until the children obtain weights, just return a random child
+        return self.random_child()
+
+    def random_child(self):
+        """Returns a random child if not leaf, else None"""
+        if self.is_leaf():
+            return None
+
+        key_iter = self.children.keys().__iter__()
+        return self.children[next(key_iter)]
+
+    def __repr__(self):
+        return "Trie(%s, ...)" % (self.val.__repr__())
